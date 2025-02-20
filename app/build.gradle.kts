@@ -71,9 +71,7 @@ dependencies {
 
     // retrofit
     implementation(libs.retrofit)
-    implementation(libs.retrofit.moshi)
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit.converter.gson)
 
     // coil
     implementation(libs.coil)
