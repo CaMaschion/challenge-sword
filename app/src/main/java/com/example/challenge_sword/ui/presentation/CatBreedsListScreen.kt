@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,7 +30,8 @@ import com.example.challenge_sword.ui.components.CatBreedComponent
 fun CatBreedsListScreen() {
 
     val viewModel: CatBreedsViewModel = hiltViewModel()
-    val catResponseBreeds by viewModel.catResponseBreeds.collectAsState()
+    val filteredBreeds by viewModel.filteredBreeds.collectAsState(initial = emptyList())
+    val searchQuery by viewModel.searchQuery.collectAsState()
 
     Column(
         modifier = Modifier
@@ -43,6 +45,15 @@ fun CatBreedsListScreen() {
             modifier = Modifier.padding(16.dp)
         )
 
+        TextField(
+            value = searchQuery,
+            onValueChange = { viewModel.updateSearchQuery(it) },
+            label = { Text("Search") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.weight(1f),
@@ -50,7 +61,7 @@ fun CatBreedsListScreen() {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(catResponseBreeds) { cat ->
+            items(filteredBreeds) { cat ->
                 CatBreedComponent(
                     cat = cat,
                 )
