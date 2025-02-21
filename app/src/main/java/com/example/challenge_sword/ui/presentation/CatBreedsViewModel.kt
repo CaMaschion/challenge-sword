@@ -24,6 +24,9 @@ class CatBreedsViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> get() = _searchQuery
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
+
     val filteredBreeds: Flow<List<CatResponse>> = combine(
         _catResponseBreeds,
         _searchQuery
@@ -48,9 +51,11 @@ class CatBreedsViewModel @Inject constructor(
             catRepository.getCats()
                 .catch { e ->
                     Log.e("CatBreedsViewModel", "Error fetching cat breeds", e)
+                    _isLoading.value = false
                 }
                 .collect { cats ->
                     _catResponseBreeds.value = cats
+                    _isLoading.value = false
                 }
         }
     }
