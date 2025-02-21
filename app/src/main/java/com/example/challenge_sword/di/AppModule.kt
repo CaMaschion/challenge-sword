@@ -1,6 +1,8 @@
 package com.example.challenge_sword.di
 
-import com.example.challenge_sword.data.service.CatApiService
+import com.example.challenge_sword.data.repository.CatRepository
+import com.example.challenge_sword.data.repository.CatRepositoryImpl
+import com.example.challenge_sword.data.service.CatService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,8 +28,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCatApi(retrofit: Retrofit) : CatApiService {
-        return retrofit.create(CatApiService::class.java)
+    fun provideCatApi(retrofit: Retrofit) : CatService {
+        return retrofit.create(CatService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCatRepository(catService: CatService): CatRepository {
+        return CatRepositoryImpl(catService)
     }
 
 }
