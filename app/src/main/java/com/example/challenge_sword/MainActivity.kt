@@ -1,5 +1,6 @@
 package com.example.challenge_sword
 
+import CatBreedsListScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.challenge_sword.data.repository.CatRepository
-import com.example.challenge_sword.ui.presentation.CatBreedsListScreen
 import com.example.challenge_sword.ui.theme.ChallengeswordTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
