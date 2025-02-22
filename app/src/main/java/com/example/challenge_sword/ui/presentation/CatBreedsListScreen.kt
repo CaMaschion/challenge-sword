@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,11 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.challenge_sword.ui.components.CatBreedComponent
+import com.example.challenge_sword.ui.components.CatBreedCardComponent
+import com.example.challenge_sword.ui.components.CatBreedTopBarComponent
 import com.example.challenge_sword.ui.presentation.CatBreedsViewModel
 
 @Composable
@@ -45,12 +44,12 @@ fun CatBreedsListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color.White)
+                .padding(top = 16.dp)
         ) {
-            Text(
-                text = "Cat Breeds",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(16.dp)
+
+            CatBreedTopBarComponent(
+                title = "Cat Breeds",
+                showBackButton = false
             )
 
             OutlinedTextField(
@@ -59,7 +58,7 @@ fun CatBreedsListScreen(
                 label = { Text("Search") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 24.dp)
             )
 
             if (isLoading) {
@@ -79,7 +78,7 @@ fun CatBreedsListScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(filteredBreeds) { cat ->
-                        CatBreedComponent(
+                        CatBreedCardComponent(
                             cat = cat,
                             onClick = {
                                 navController.navigate("catBreedsDetails/${cat.id}")

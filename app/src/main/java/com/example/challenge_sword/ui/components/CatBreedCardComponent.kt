@@ -35,7 +35,7 @@ import com.example.challenge_sword.R
 import com.example.challenge_sword.data.model.CatResponse
 
 @Composable
-fun CatBreedComponent(cat: CatResponse, onClick: () -> Unit) {
+fun CatBreedCardComponent(cat: CatResponse, onClick: () -> Unit) {
 
     val isFavorite = remember { mutableStateOf(false) }
 
