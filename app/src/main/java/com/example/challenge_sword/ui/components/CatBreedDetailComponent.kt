@@ -41,9 +41,9 @@ fun CatBreedDetailComponent(
     cat: CatResponse?,
     onBackButtonClick: () -> Unit
 ) {
-    val isFavorite = remember { mutableStateOf(false) }
+    val isFavourite = remember { mutableStateOf(false) }
     val tint by animateColorAsState(
-        targetValue = if (isFavorite.value) Color.Red else Color.Red,
+        targetValue = if (isFavourite.value) Color.Red else Color.Red,
         animationSpec = tween(durationMillis = 500)
     )
 
@@ -128,8 +128,8 @@ fun CatBreedDetailComponent(
 
                 IconButton(
                     onClick = {
-                        isFavorite.value = !isFavorite.value
-                        val message = if (isFavorite.value) {
+                        isFavourite.value = !isFavourite.value
+                        val message = if (isFavourite.value) {
                             "Foi adicionado aos favoritos"
                         } else {
                             "Foi excluído dos favoritos"
@@ -140,7 +140,7 @@ fun CatBreedDetailComponent(
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
                 ) {
-                    val icon = if (isFavorite.value) {
+                    val icon = if (isFavourite.value) {
                         painterResource(id = R.drawable.ic_favorite_filled)
                     } else {
                         painterResource(id = R.drawable.ic_favorite_border)
