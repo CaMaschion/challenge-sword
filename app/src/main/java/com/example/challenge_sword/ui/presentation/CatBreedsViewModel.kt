@@ -46,6 +46,11 @@ class CatBreedsViewModel @Inject constructor(
         _searchQuery.value = query
     }
 
+    fun getSelectedCatBreed(catId: String): CatResponse? {
+        return _catResponseBreeds.value.find { it.id == catId }
+
+    }
+
     private fun fetchCatBreeds() {
         viewModelScope.launch {
             catRepository.getCats()
