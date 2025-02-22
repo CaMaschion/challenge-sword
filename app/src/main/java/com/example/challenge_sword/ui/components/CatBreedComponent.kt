@@ -35,14 +35,14 @@ import com.example.challenge_sword.R
 import com.example.challenge_sword.data.model.CatResponse
 
 @Composable
-fun CatBreedComponent(cat: CatResponse) {
+fun CatBreedComponent(cat: CatResponse, onClick: () -> Unit) {
 
     val isFavorite = remember { mutableStateOf(false) }
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
-            .clickable(onClick = { /*TODO*/ })
+            .clickable(onClick = onClick)
             .width(200.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(
@@ -59,9 +59,9 @@ fun CatBreedComponent(cat: CatResponse) {
                 }
             ) {
                 val icon = if (isFavorite.value) {
-                    painterResource(id = R.drawable.ic_star_border)  // Estrela cheia
+                    painterResource(id = R.drawable.ic_favorite_filled)
                 } else {
-                    painterResource(id = R.drawable.ic_star_border)  // Estrela vazia
+                    painterResource(id = R.drawable.ic_favorite_border)
                 }
                 Icon(
                     painter = icon,

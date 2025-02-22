@@ -25,11 +25,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.challenge_sword.ui.components.CatBreedComponent
 import com.example.challenge_sword.ui.presentation.CatBreedsViewModel
 
 @Composable
-fun CatBreedsListScreen() {
+fun CatBreedsListScreen(
+    navController: NavController
+) {
 
     val viewModel: CatBreedsViewModel = hiltViewModel()
     val filteredBreeds by viewModel.filteredBreeds.collectAsState(initial = emptyList())
@@ -78,6 +81,9 @@ fun CatBreedsListScreen() {
                     items(filteredBreeds) { cat ->
                         CatBreedComponent(
                             cat = cat,
+                            onClick = {
+                                navController.navigate("catBreedsDetails/${cat.id}")
+                            }
                         )
                     }
                 }
