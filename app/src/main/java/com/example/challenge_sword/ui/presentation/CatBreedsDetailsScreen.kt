@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,122 +41,137 @@ import com.example.challenge_sword.R
 
 @Composable
 fun CatBreedsDetailsScreen(catId: String) {
-    val viewModel: CatBreedsViewModel = hiltViewModel()
-    val cat = viewModel.getSelectedCatBreed(catId = catId)
+    val viewModel: CatBreedsDetailsViewModel = hiltViewModel()
+    val cat by viewModel.selectedCatBreed
     val isFavorite = remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.collectAsState()
     val tint by animateColorAsState(
         targetValue = if (isFavorite.value) Color.Red else Color.Red,
         animationSpec = tween(durationMillis = 500)
     )
     val context = LocalContext.current
 
-    if (cat == null) {
-        Text(
-            text = "Cat not found",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(16.dp)
-        )
-    } else {
+    LaunchedEffect(catId) {
+        viewModel.getSelectedCatBreed(catId)
+    }
+
+    if (isLoading) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(color = Color.White)
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(color = Color.White),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val imageUrl = cat.url
-                Image(
-                    painter = rememberAsyncImagePainter(model = imageUrl),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "Cat Image",
+            CircularProgressIndicator()
+        }
+    } else {
+        if (cat == null) {
+            Text(
+                text = "Cat not found",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(16.dp)
+            )
+        } else {
+            cat?.let { catDetails ->
+                Box(
                     modifier = Modifier
-                        .size(150.dp)
-                        .clip(CircleShape)
-                        .align(Alignment.CenterHorizontally),
-                )
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .background(color = Color.White)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .background(color = Color.White),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val imageUrl = catDetails.url
+                        Image(
+                            painter = rememberAsyncImagePainter(model = imageUrl),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = "Cat Image",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(CircleShape)
+                                .align(Alignment.CenterHorizontally),
+                        )
 
-                Spacer(modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.size(16.dp))
 
-                Text(
-                    text = cat.breeds.first().name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                )
+                        Text(
+                            text = catDetails.breeds.firstOrNull()?.name.orEmpty(),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
 
+                        Spacer(modifier = Modifier.size(8.dp))
 
-                Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Origin")
+                                }
+                                append(": ${catDetails.breeds.firstOrNull()?.origin.orEmpty()}")
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
 
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Origin")
-                        }
-                        append(": ${cat.breeds.first().origin}")
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                        Spacer(modifier = Modifier.size(8.dp))
 
-                Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            modifier = Modifier
+                                .padding(8.dp),
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Temperament")
+                                }
+                                append(": ${catDetails.breeds.firstOrNull()?.temperament.orEmpty()}")
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
 
-                Text(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Temperament")
-                        }
-                        append(": ${cat.breeds.first().temperament}")
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                        Spacer(modifier = Modifier.size(8.dp))
 
-                Spacer(modifier = Modifier.size(8.dp))
-
-                Text(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Life Span")
-                        }
-                        append(": ${cat.breeds.first().description}")
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-
-            IconButton(
-                onClick = {
-                    isFavorite.value = !isFavorite.value
-                    val message = if (isFavorite.value) {
-                        "Foi adicionado aos favoritos"
-                    } else {
-                        "Foi excluído dos favoritos"
+                        Text(
+                            modifier = Modifier
+                                .padding(8.dp),
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Life Span")
+                                }
+                                append(": ${catDetails.breeds.firstOrNull()?.description.orEmpty()}")
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
                     }
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-            ) {
-                val icon = if (isFavorite.value) {
-                    painterResource(id = R.drawable.ic_favorite_filled)
-                } else {
-                    painterResource(id = R.drawable.ic_favorite_border)
+
+                    IconButton(
+                        onClick = {
+                            isFavorite.value = !isFavorite.value
+                            val message = if (isFavorite.value) {
+                                "Foi adicionado aos favoritos"
+                            } else {
+                                "Foi excluído dos favoritos"
+                            }
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                    ) {
+                        val icon = if (isFavorite.value) {
+                            painterResource(id = R.drawable.ic_favorite_filled)
+                        } else {
+                            painterResource(id = R.drawable.ic_favorite_border)
+                        }
+                        Icon(
+                            modifier = Modifier.size(100.dp),
+                            painter = icon,
+                            contentDescription = "Favorite",
+                            tint = tint,
+                        )
+                    }
                 }
-                Icon(
-                    modifier = Modifier.size(100.dp),
-                    painter = icon,
-                    contentDescription = "Favorite",
-                    tint = tint,
-                )
             }
         }
     }
