@@ -1,7 +1,5 @@
 package com.example.challenge_sword.ui.components
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,11 +19,11 @@ import com.example.challenge_sword.R
 
 @Composable
 fun CatBreedFavouriteIconButtonComponent(
-    isFavourite: MutableState<Boolean>,
-    context: Context,
+    isFavourite: Boolean,
+    onClick: () -> Unit = {},
 ) {
     val tint by animateColorAsState(
-        targetValue = if (isFavourite.value) Color.Red else Color.Red,
+        targetValue = if (isFavourite) Color.Red else Color.Red,
         animationSpec = tween(durationMillis = 500)
     )
     Box(
@@ -35,18 +32,10 @@ fun CatBreedFavouriteIconButtonComponent(
             .padding(8.dp)
     ) {
         IconButton(
-            onClick = {
-                isFavourite.value = !isFavourite.value
-                val message = if (isFavourite.value) {
-                    "Foi adicionado aos favoritos"
-                } else {
-                    "Foi excluído dos favoritos"
-                }
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            },
+            onClick = onClick,
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
-            val icon = if (isFavourite.value) {
+            val icon = if (isFavourite) {
                 painterResource(id = R.drawable.ic_favorite_filled)
             } else {
                 painterResource(id = R.drawable.ic_favorite_border)

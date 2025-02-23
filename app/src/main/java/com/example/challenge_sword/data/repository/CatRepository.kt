@@ -1,5 +1,6 @@
 package com.example.challenge_sword.data.repository
 
+import com.example.challenge_sword.data.model.request.FavouriteRequest
 import com.example.challenge_sword.data.service.CatService
 import com.example.challenge_sword.domain.mapper.CatBreedMapper
 import com.example.challenge_sword.domain.model.CatBreed
@@ -11,6 +12,8 @@ interface CatRepository {
     fun getCats(): Flow<List<CatBreed>>
     fun getCatById(catId: String): Flow<CatBreed?>
     fun getFavouriteCats(subId: String): Flow<List<CatBreed>>
+    suspend fun addFavouriteCat(subId: String, catId: String)
+    suspend fun removeFavouriteCat(favouriteId: String)
 }
 
 class CatRepositoryImpl @Inject constructor(
@@ -40,5 +43,14 @@ class CatRepositoryImpl @Inject constructor(
                 favouriteResponses.map { catBreedMapper.toDomain(it) }
             emit(favouriteBreeds)
         }
+    }
+
+    override suspend fun addFavouriteCat(subId: String, catId: String) {
+        val favouriteRequest = FavouriteRequest(sub_id = subId, image_id = catId)
+        api.addFavouriteCat(favouriteRequest)
+    }
+
+    override suspend fun removeFavouriteCat(favouriteId: String) {
+        api.removeFavouriteCat(favouriteId)
     }
 }

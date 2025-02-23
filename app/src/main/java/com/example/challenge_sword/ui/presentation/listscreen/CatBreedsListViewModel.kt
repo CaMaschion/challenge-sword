@@ -1,10 +1,12 @@
 package com.example.challenge_sword.ui.presentation.listscreen
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.challenge_sword.domain.model.CatBreed
 import com.example.challenge_sword.data.repository.CatRepository
+import com.example.challenge_sword.domain.interactor.FavouriteInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatBreedsListViewModel @Inject constructor(
-    private val catRepository: CatRepository
+    private val catRepository: CatRepository,
+    private val favouriteInteractor: FavouriteInteractor
 ) : ViewModel() {
 
     private val _catResponseBreeds = MutableStateFlow<List<CatBreed>>(emptyList())
@@ -36,9 +39,13 @@ class CatBreedsListViewModel @Inject constructor(
             breeds
         } else {
             breeds.filter { breed ->
-                breed.name.contains(query, ignoreCase = true)}
+                breed.name.contains(query, ignoreCase = true)
+            }
         }
     }
+
+    private val _favouriteCats = mutableStateMapOf<String, Boolean>()
+    val favouriteCats: Map<String, Boolean> get() = _favouriteCats
 
     init {
         fetchCatBreeds()
@@ -59,6 +66,18 @@ class CatBreedsListViewModel @Inject constructor(
                     _catResponseBreeds.value = cat
                     _isLoading.value = false
                 }
+        }
+    }
+
+    fun toggleFavourite(cat: CatBreed) {
+        viewModelScope.launch {
+            val isFavourite = _favouriteCats[cat.id] ?: false
+            if (isFavourite) {
+                favouriteInteractor.removeFavouriteCat(cat.id)
+            } else {
+                favouriteInteractor.addFavouriteCat(cat.id)
+            }
+            _favouriteCats[cat.id] = !isFavourite
         }
     }
 }

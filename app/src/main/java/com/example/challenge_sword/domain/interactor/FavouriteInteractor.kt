@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 interface FavouriteInteractor {
-    fun getFavouriteCats(subId: String): Flow<List<CatBreed>>
+    fun getFavouriteCats(): Flow<List<CatBreed>>
+    suspend fun addFavouriteCat(catId: String)
+    suspend fun removeFavouriteCat(favouriteId: String)
 
 }
 
@@ -16,7 +18,9 @@ class FavouriteInteractorImpl @Inject constructor(
     private val catRepository: CatRepository
 ) : FavouriteInteractor {
 
-    override fun getFavouriteCats(subId: String): Flow<List<CatBreed>> {
+    private val subId = "4706dc5f-9fd7-4952-bb74-8d85687f47ba"
+
+    override fun getFavouriteCats(): Flow<List<CatBreed>> {
         return flow {
             val favouriteCats = catRepository.getFavouriteCats(subId)
             val detailedCats = mutableListOf<CatBreed>()
@@ -33,4 +37,13 @@ class FavouriteInteractorImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun addFavouriteCat(catId: String) {
+        catRepository.addFavouriteCat(subId, catId)
+    }
+
+    override suspend fun removeFavouriteCat(favouriteId: String) {
+        return catRepository.removeFavouriteCat(favouriteId)
+    }
+
 }

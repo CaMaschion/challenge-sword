@@ -20,8 +20,6 @@ class CatBreedFavouriteViewModel @Inject constructor(
     private val _catFavourite = MutableStateFlow<List<CatBreed>>(emptyList())
     val catFavourite: StateFlow<List<CatBreed>> get() = _catFavourite
 
-    private val subId = "4706dc5f-9fd7-4952-bb74-8d85687f47ba"
-
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
@@ -31,7 +29,7 @@ class CatBreedFavouriteViewModel @Inject constructor(
 
     private fun fetchFavouriteCat() {
         viewModelScope.launch {
-            interactor.getFavouriteCats(subId)
+            interactor.getFavouriteCats()
                 .catch { e ->
                     Log.e("CatBreedsFavouriteViewModel", "Error fetching cat breeds", e)
                     _isLoading.value = false
