@@ -52,7 +52,11 @@ fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
                 cat = cat,
                 onBackButtonClick = onBackButtonClick,
                 onClickFavourite = {
-                    viewModel.toggleFavourite()
+                    cat?.let {
+                        viewModel.toggleFavourite(
+                            cat = it
+                        )
+                    }
                 }
             )
         }
