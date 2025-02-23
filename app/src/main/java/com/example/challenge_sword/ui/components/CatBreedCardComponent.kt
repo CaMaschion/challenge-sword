@@ -1,5 +1,6 @@
 package com.example.challenge_sword.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,21 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.challenge_sword.R
-import com.example.challenge_sword.data.model.CatResponse
+import com.example.challenge_sword.domain.model.CatBreed
 
 @Composable
 fun CatBreedCardComponent(
-    cat: CatResponse,
-    onClick: () -> Unit
+    cat: CatBreed,
+    onClick: () -> Unit,
+    context: Context
 ) {
-
-    val isFavorite = remember { mutableStateOf(false) }
-
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
@@ -56,24 +51,10 @@ fun CatBreedCardComponent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            IconButton(
-                onClick = {
-                    isFavorite.value = !isFavorite.value
-                }
-            ) {
-                val icon = if (isFavorite.value) {
-                    painterResource(id = R.drawable.ic_favorite_filled)
-                } else {
-                    painterResource(id = R.drawable.ic_favorite_border)
-                }
-                Icon(
-                    painter = icon,
-                    contentDescription = "Favorite Breed",
-                    modifier = Modifier
-                        .size(30.dp),
-                    tint = Color.Black
-                )
-            }
+            CatBreedFavouriteIconButtonComponent(
+                isFavourite = remember { mutableStateOf(false) },
+                context = context
+            )
         }
         Column(
             modifier = Modifier
@@ -81,7 +62,7 @@ fun CatBreedCardComponent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val imageUrl = cat.url
+            val imageUrl = cat.imageUrl
             Image(
                 painter = rememberAsyncImagePainter(model = imageUrl),
                 contentScale = ContentScale.Crop,
@@ -94,7 +75,7 @@ fun CatBreedCardComponent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val breedName = cat.breeds.first().name
+            val breedName = cat.name
             Text(
                 text = breedName,
                 style = MaterialTheme.typography.bodyMedium,

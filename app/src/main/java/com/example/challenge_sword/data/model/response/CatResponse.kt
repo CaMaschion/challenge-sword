@@ -1,4 +1,4 @@
-package com.example.challenge_sword.data.model
+package com.example.challenge_sword.data.model.response
 
 data class CatResponse(
     val breeds: List<Breed>,
@@ -14,6 +14,6 @@ data class Breed(
     val temperament: String,
     val origin: String,
     val description: String,
-    val life_span: String,
+    val lifeSpan: String,
 )
 

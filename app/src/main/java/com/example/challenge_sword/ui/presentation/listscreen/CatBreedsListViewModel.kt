@@ -1,9 +1,9 @@
-package com.example.challenge_sword.ui.presentation
+package com.example.challenge_sword.ui.presentation.listscreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.challenge_sword.data.model.CatResponse
+import com.example.challenge_sword.domain.model.CatBreed
 import com.example.challenge_sword.data.repository.CatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -15,11 +15,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CatBreedsViewModel @Inject constructor(
+class CatBreedsListViewModel @Inject constructor(
     private val catRepository: CatRepository
 ) : ViewModel() {
 
-    private val _catResponseBreeds = MutableStateFlow<List<CatResponse>>(emptyList())
+    private val _catResponseBreeds = MutableStateFlow<List<CatBreed>>(emptyList())
+    val catResponseBreeds: StateFlow<List<CatBreed>> get() = _catResponseBreeds
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> get() = _searchQuery
@@ -27,14 +28,15 @@ class CatBreedsViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    val filteredBreeds: Flow<List<CatResponse>> = combine(
+    val filteredBreeds: Flow<List<CatBreed>> = combine(
         _catResponseBreeds,
         _searchQuery
     ) { breeds, query ->
         if (query.isEmpty()) {
             breeds
         } else {
-            breeds.filter { it.breeds.first().name.contains(query, ignoreCase = true) }
+            breeds.filter { breed ->
+                breed.name.contains(query, ignoreCase = true)}
         }
     }
 
@@ -53,8 +55,8 @@ class CatBreedsViewModel @Inject constructor(
                     Log.e("CatBreedsViewModel", "Error fetching cat breeds", e)
                     _isLoading.value = false
                 }
-                .collect { cats ->
-                    _catResponseBreeds.value = cats
+                .collect { cat ->
+                    _catResponseBreeds.value = cat
                     _isLoading.value = false
                 }
         }
