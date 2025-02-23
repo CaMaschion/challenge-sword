@@ -26,7 +26,8 @@ class CatBreedMapper {
             origin = "",
             temperament = "",
             description = "",
-            lifeSpan = ""
+            lifeSpan = "",
+            favouriteId = favouriteResponse.id
         )
     }
 }

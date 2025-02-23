@@ -11,7 +11,6 @@ interface FavouriteInteractor {
     fun getFavouriteCats(): Flow<List<CatBreed>>
     suspend fun addFavouriteCat(catId: String)
     suspend fun removeFavouriteCat(favouriteId: String)
-
 }
 
 class FavouriteInteractorImpl @Inject constructor(
@@ -19,11 +18,11 @@ class FavouriteInteractorImpl @Inject constructor(
 ) : FavouriteInteractor {
 
     private val subId = "4706dc5f-9fd7-4952-bb74-8d85687f47ba"
+    private val detailedCats = mutableListOf<CatBreed>()
 
     override fun getFavouriteCats(): Flow<List<CatBreed>> {
         return flow {
             val favouriteCats = catRepository.getFavouriteCats(subId)
-            val detailedCats = mutableListOf<CatBreed>()
             favouriteCats.collect { cats ->
                 cats.forEach { cat ->
                     val catDetail = catRepository.getCatById(cat.id).map { it }
@@ -42,8 +41,13 @@ class FavouriteInteractorImpl @Inject constructor(
         catRepository.addFavouriteCat(subId, catId)
     }
 
-    override suspend fun removeFavouriteCat(favouriteId: String) {
-        return catRepository.removeFavouriteCat(favouriteId)
+    override suspend fun removeFavouriteCat(catId: String) {
+        catRepository.getFavouriteCats(subId).collect { cats ->
+            cats.forEach { cat ->
+                if (cat.id == catId) {
+                    catRepository.removeFavouriteCat(favouriteId = cat.favouriteId.toString())
+                }
+            }
+        }
     }
-
 }

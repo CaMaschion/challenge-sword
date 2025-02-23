@@ -31,6 +31,9 @@ class CatBreedsListViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
+    private val _favouriteCats = mutableStateMapOf<String, Boolean>()
+    val favouriteCats: Map<String, Boolean> get() = _favouriteCats
+
     val filteredBreeds: Flow<List<CatBreed>> = combine(
         _catResponseBreeds,
         _searchQuery
@@ -43,9 +46,6 @@ class CatBreedsListViewModel @Inject constructor(
             }
         }
     }
-
-    private val _favouriteCats = mutableStateMapOf<String, Boolean>()
-    val favouriteCats: Map<String, Boolean> get() = _favouriteCats
 
     init {
         fetchCatBreeds()

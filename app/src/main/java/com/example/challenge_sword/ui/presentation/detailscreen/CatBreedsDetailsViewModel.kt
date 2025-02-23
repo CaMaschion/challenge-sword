@@ -44,19 +44,14 @@ class CatBreedsDetailsViewModel @Inject constructor(
         }
     }
 
-    fun toggleFavourite() {
+    fun toggleFavourite(cat: CatBreed) {
         viewModelScope.launch {
-            selectedCatBreed.value?.let { cat ->
+            if (_isFavourite.value) {
+                favouriteInteractor.removeFavouriteCat(cat.id)
+            } else {
                 favouriteInteractor.addFavouriteCat(cat.id)
-                _isFavourite.value = true
             }
-        }
-    }
-
-    fun untoggleFavourite(favouriteId: String) {
-        viewModelScope.launch {
-            favouriteInteractor.removeFavouriteCat(favouriteId)
-            _isFavourite.value = false
+            _isFavourite.value = !_isFavourite.value
         }
     }
 }
