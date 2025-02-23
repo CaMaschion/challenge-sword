@@ -37,7 +37,6 @@ fun CatBreedFavouriteScreen(
     val catFavourite by viewModel.catFavourite.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState()
     val listState = rememberLazyGridState()
-    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -74,10 +73,10 @@ fun CatBreedFavouriteScreen(
                         CatBreedCardComponent(
                             showLifeSpan = true,
                             cat = cat,
+                            isFavourite = true,
                             onClick = {
                                 navController.navigate("catBreedsDetails/${cat.id}")
-                            },
-                            context = context
+                            }
                         )
                     }
                 }
