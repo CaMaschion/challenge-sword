@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">challenge-sword</string>
     <string name="cat_breeds">Cat Breeds</string>
+    <string name="cat_breeds_details">Cat Details</string>
     <string name="cat_favourites">Cat Favourites</string>
     <string name="go_to_favourites">Go to Favourites</string>
+    <string name="cat_not_found">Cat not found</string>
 </resources>

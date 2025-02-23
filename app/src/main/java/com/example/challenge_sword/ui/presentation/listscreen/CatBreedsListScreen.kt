@@ -21,25 +21,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.challenge_sword.R
 import com.example.challenge_sword.ui.components.CatBreedCardComponent
+import com.example.challenge_sword.ui.components.CatBreedNotFoundComponent
 import com.example.challenge_sword.ui.components.CatBreedTopBarComponent
-import com.example.challenge_sword.ui.presentation.CatBreedsViewModel
+import com.example.challenge_sword.ui.presentation.listscreen.CatBreedsListViewModel
 
 @Composable
 fun CatBreedsListScreen(
-    navController: NavController
+    navController: NavController,
 ) {
 
-    val viewModel: CatBreedsViewModel = hiltViewModel()
+    val viewModel: CatBreedsListViewModel = hiltViewModel()
     val filteredBreeds by viewModel.filteredBreeds.collectAsState(initial = emptyList())
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val listState = rememberLazyGridState()
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -63,45 +66,57 @@ fun CatBreedsListScreen(
                     .padding(horizontal = 24.dp)
             )
 
-            if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+            when {
+                isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
-            } else {
-                LazyVerticalGrid(
-                    state = listState,
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(filteredBreeds) { cat ->
-                        CatBreedCardComponent(
-                            cat = cat,
-                            onClick = {
-                                navController.navigate("catBreedsDetails/${cat.id}")
-                            }
-                        )
+
+                filteredBreeds.isEmpty() -> {
+                    CatBreedNotFoundComponent(
+                        message = stringResource(id = R.string.cat_not_found),
+                        showBackButton = false
+                    )
+                }
+
+                else -> {
+                    LazyVerticalGrid(
+                        state = listState,
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(filteredBreeds) { cat ->
+                            CatBreedCardComponent(
+                                cat = cat,
+                                onClick = {
+                                    navController.navigate("catBreedsDetails/${cat.id}")
+                                },
+                                context = context
+                            )
+                        }
                     }
                 }
             }
-
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = stringResource(id = R.string.go_to_favourites))
-            }
+        }
+        Button(
+            onClick = { navController.navigate("catBreedFavouriteScreen") },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black,
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.BottomCenter)
+        ) {
+            Text(text = stringResource(id = R.string.go_to_favourites))
         }
     }
 }
