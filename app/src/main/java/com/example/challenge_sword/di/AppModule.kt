@@ -3,6 +3,8 @@ package com.example.challenge_sword.di
 import com.example.challenge_sword.data.repository.CatRepository
 import com.example.challenge_sword.data.repository.CatRepositoryImpl
 import com.example.challenge_sword.data.service.CatService
+import com.example.challenge_sword.domain.interactor.FavouriteInteractor
+import com.example.challenge_sword.domain.interactor.FavouriteInteractorImpl
 import com.example.challenge_sword.domain.mapper.CatBreedMapper
 import dagger.Module
 import dagger.Provides
@@ -46,5 +48,13 @@ object AppModule {
     @Singleton
     fun provideCatMapper(): CatBreedMapper {
         return CatBreedMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouriteInteractor(
+        catRepository: CatRepository
+    ): FavouriteInteractor {
+        return FavouriteInteractorImpl(catRepository)
     }
 }
