@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.challenge_sword.ui.presentation.favouritescreen.CatBreedFavouriteScreen
 
 @Composable
 fun NavGraph(
@@ -29,6 +30,14 @@ fun NavGraph(
                     navController.popBackStack()
                 })
             }
+        }
+        composable("catBreedFavouriteScreen") {
+            CatBreedFavouriteScreen(
+                navController = navController,
+                onBackButtonClick = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

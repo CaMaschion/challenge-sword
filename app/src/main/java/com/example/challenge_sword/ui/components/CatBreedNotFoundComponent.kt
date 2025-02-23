@@ -1,5 +1,6 @@
 package com.example.challenge_sword.ui.components
 
+import android.widget.Button
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +12,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CatBreedDetailNotFoundComponent(onBackButtonClick: () -> Unit) {
+fun CatBreedNotFoundComponent(
+    message: String,
+    onBackButtonClick: () -> Unit = {},
+    showBackButton: Boolean = true
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -21,13 +26,15 @@ fun CatBreedDetailNotFoundComponent(onBackButtonClick: () -> Unit) {
         Column(
         ) {
             Text(
-                text = "Cat not found",
+                text = message,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            Button(onClick = onBackButtonClick) {
-                Text(text = "Back")
+            if (showBackButton) {
+                Button(onClick = onBackButtonClick) {
+                    Text(text = "Back")
+                }
             }
         }
     }

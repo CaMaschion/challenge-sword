@@ -1,4 +1,4 @@
-package com.example.challenge_sword.data.model
+package com.example.challenge_sword.data.model.response
 
 data class FavouriteResponse(
     val id: Long,

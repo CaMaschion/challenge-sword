@@ -1,6 +1,6 @@
 package com.example.challenge_sword.data.service
 
-import com.example.challenge_sword.data.model.CatResponse
+import com.example.challenge_sword.data.model.response.CatResponse
 import javax.inject.Inject
 
 interface CatApi {

@@ -1,7 +1,7 @@
 package com.example.challenge_sword.data.service
 
-import com.example.challenge_sword.data.model.CatResponse
-import com.example.challenge_sword.data.model.FavouriteResponse
+import com.example.challenge_sword.data.model.response.CatResponse
+import com.example.challenge_sword.data.model.response.FavouriteResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path

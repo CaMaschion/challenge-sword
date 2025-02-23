@@ -10,10 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.challenge_sword.R
 import com.example.challenge_sword.ui.components.CatBreedDetailComponent
 import com.example.challenge_sword.ui.components.CatBreedTopBarComponent
-import com.example.challenge_sword.ui.presentation.CatBreedsDetailsViewModel
+import com.example.challenge_sword.ui.presentation.detailscreen.CatBreedsDetailsViewModel
 
 @Composable
 fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
@@ -31,7 +33,7 @@ fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
             .background(color = Color.White)
     ) {
         CatBreedTopBarComponent(
-            title = "Cat Details",
+            title = stringResource(id = R.string.cat_breeds_details),
             showBackButton = true,
             onBackButtonClick = onBackButtonClick
         )
