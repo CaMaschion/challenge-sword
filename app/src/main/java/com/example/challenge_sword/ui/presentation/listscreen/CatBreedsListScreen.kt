@@ -42,7 +42,6 @@ fun CatBreedsListScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val listState = rememberLazyGridState()
-    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -95,10 +94,15 @@ fun CatBreedsListScreen(
                         items(filteredBreeds) { cat ->
                             CatBreedCardComponent(
                                 cat = cat,
+                                onClickFavourite = {
+                                   viewModel.toggleFavourite(
+                                        cat = cat
+                                   )
+                                },
+                                isFavourite = viewModel.favouriteCats[cat.id] ?: false,
                                 onClick = {
                                     navController.navigate("catBreedsDetails/${cat.id}")
-                                },
-                                context = context
+                                }
                             )
                         }
                     }

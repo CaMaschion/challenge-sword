@@ -1,6 +1,5 @@
 package com.example.challenge_sword.ui.components
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +30,11 @@ import com.example.challenge_sword.domain.model.CatBreed
 
 @Composable
 fun CatBreedCardComponent(
+    isFavourite: Boolean,
     cat: CatBreed,
     onClick: () -> Unit,
-    context: Context
+    showLifeSpan: Boolean = false,
+    onClickFavourite: () -> Unit = {}
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -52,8 +51,8 @@ fun CatBreedCardComponent(
             horizontalArrangement = Arrangement.End,
         ) {
             CatBreedFavouriteIconButtonComponent(
-                isFavourite = remember { mutableStateOf(false) },
-                context = context
+                isFavourite = isFavourite,
+                onClick = onClickFavourite
             )
         }
         Column(
@@ -82,6 +81,13 @@ fun CatBreedCardComponent(
                 fontWeight = FontWeight.Bold,
             )
 
+            if (showLifeSpan) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Lifespan: ${cat.getAverageLifeSpan()}",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
 }

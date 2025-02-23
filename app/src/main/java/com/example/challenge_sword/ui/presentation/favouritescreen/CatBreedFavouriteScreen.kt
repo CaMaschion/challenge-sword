@@ -1,4 +1,4 @@
-package com.example.challenge_sword.ui.presentation
+package com.example.challenge_sword.ui.presentation.favouritescreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,7 +34,7 @@ fun CatBreedFavouriteScreen(
 ) {
 
     val viewModel: CatBreedFavouriteViewModel = hiltViewModel()
-    val favouritesCats by viewModel.favouritesCats.collectAsState(initial = emptyList())
+    val catFavourite by viewModel.catFavourite.collectAsState(initial = emptyList())
     val isLoading by viewModel.isLoading.collectAsState()
     val listState = rememberLazyGridState()
 
@@ -68,13 +69,15 @@ fun CatBreedFavouriteScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(favouritesCats) { cat ->
-//                        CatBreedCardComponent(
-//                            cat = cat,
-//                            onClick = {
-//                                navController.navigate("catBreedsDetails/${cat.id}")
-//                            }
-//                        )
+                    items(catFavourite) { cat ->
+                        CatBreedCardComponent(
+                            showLifeSpan = true,
+                            cat = cat,
+                            isFavourite = true,
+                            onClick = {
+                                navController.navigate("catBreedsDetails/${cat.id}")
+                            }
+                        )
                     }
                 }
             }
