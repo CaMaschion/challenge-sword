@@ -1,6 +1,6 @@
 package com.example.challenge_sword.domain.model
 
-data class CatBreed (
+data class CatBreed(
     val id: String,
     val name: String,
     val temperament: String,
@@ -8,4 +8,15 @@ data class CatBreed (
     val description: String,
     val lifeSpan: String,
     val imageUrl: String
-)
+) {
+    fun getAverageLifeSpan(): String {
+        val lifespanRange = lifeSpan.split("-")
+        val lifespan = lifespanRange.lastOrNull()
+
+        return if (lifespanRange.size == 1) {
+            "Unknown"
+        } else {
+            lifespan.toString()
+        }
+    }
+}

@@ -25,7 +25,7 @@ class CatRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCatById(catId: String): Flow<CatBreed?> {
+    override fun getCatById(catId: String): Flow<CatBreed> {
         return flow {
             val catResponse = api.getCatById(catId)
             val catBreed = catResponse.let { catBreedMapper.toDomain(it) }

@@ -35,7 +35,8 @@ import com.example.challenge_sword.domain.model.CatBreed
 fun CatBreedCardComponent(
     cat: CatBreed,
     onClick: () -> Unit,
-    context: Context
+    context: Context,
+    showLifeSpan: Boolean = false
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -82,6 +83,13 @@ fun CatBreedCardComponent(
                 fontWeight = FontWeight.Bold,
             )
 
+            if (showLifeSpan) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Lifespan: ${cat.getAverageLifeSpan()}",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
 }

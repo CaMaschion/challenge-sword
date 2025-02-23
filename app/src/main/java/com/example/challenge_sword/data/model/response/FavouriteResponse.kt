@@ -2,8 +2,8 @@ package com.example.challenge_sword.data.model.response
 
 data class FavouriteResponse(
     val id: Long,
-    val imageId: String,
-    val subId: String?,
+    val image_id: String,
+    val sub_id: String?,
     val image: Image
 )
 

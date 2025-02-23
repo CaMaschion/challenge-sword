@@ -6,7 +6,7 @@ import com.example.challenge_sword.data.model.response.FavouriteResponse
 
 class CatBreedMapper {
     fun toDomain(catResponse: CatResponse): CatBreed {
-        val breed = catResponse.breeds.firstOrNull()
+        val breed = catResponse.breeds?.firstOrNull()
         return CatBreed(
             id = catResponse.id,
             name = breed?.name.orEmpty(),
@@ -14,13 +14,13 @@ class CatBreedMapper {
             origin = breed?.origin.orEmpty(),
             temperament = breed?.temperament.orEmpty(),
             description = breed?.description.orEmpty(),
-            lifeSpan = breed?.lifeSpan.orEmpty()
+            lifeSpan = breed?.life_span.orEmpty()
         )
     }
 
     fun toDomain(favouriteResponse: FavouriteResponse): CatBreed {
         return CatBreed(
-            id = favouriteResponse.id.toString(),
+            id = favouriteResponse.image.id,
             name = "",
             imageUrl = favouriteResponse.image.url,
             origin = "",

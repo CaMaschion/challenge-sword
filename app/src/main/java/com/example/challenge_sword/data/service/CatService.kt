@@ -5,6 +5,7 @@ import com.example.challenge_sword.data.model.response.FavouriteResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CatService {
     @Headers("x-api-key: live_dLLr4LPMOFwVwl31R3rjNrYg5ixhIZG5kq5iE8HRZrKIiasrZbORw5HjqT8HsJhB")
@@ -16,7 +17,9 @@ interface CatService {
     suspend fun getCatById(@Path("catId") catId: String): CatResponse
 
     @Headers("x-api-key: live_dLLr4LPMOFwVwl31R3rjNrYg5ixhIZG5kq5iE8HRZrKIiasrZbORw5HjqT8HsJhB")
-    @GET("v1/favourites?limit=20&sub_id={subId}")
-    suspend fun getFavouriteCats(@Path("subId") subId: String): List<FavouriteResponse>
+    @GET("v1/favourites?limit=20")
+    suspend fun getFavouriteCats(
+        @Query("sub_id") subId: String
+    ): List<FavouriteResponse>
 
 }
