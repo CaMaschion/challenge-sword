@@ -29,7 +29,6 @@ import com.example.challenge_sword.domain.model.CatBreed
 
 @Composable
 fun CatBreedDetailComponent(
-    isFavourite: Boolean,
     cat: CatBreed?,
     onBackButtonClick: () -> Unit,
     onClickFavourite: () -> Unit = {},
@@ -116,7 +115,7 @@ fun CatBreedDetailComponent(
                 }
 
                 CatBreedFavouriteIconButtonComponent(
-                    isFavourite = isFavourite,
+                    isFavourite = cat.isFavourite,
                     onClick = onClickFavourite
                 )
             }
