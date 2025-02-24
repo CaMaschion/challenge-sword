@@ -1,7 +1,7 @@
 package com.example.challenge_sword.data.repository
 
-import com.example.challenge_sword.data.dao.FavouriteCatDao
-import com.example.challenge_sword.data.model.entity.FavouriteCat
+import com.example.challenge_sword.data.dao.FavouriteDao
+import com.example.challenge_sword.data.entity.FavouriteEntity
 import com.example.challenge_sword.data.service.CatService
 import com.example.challenge_sword.domain.mapper.CatBreedMapper
 import com.example.challenge_sword.domain.model.CatBreed
@@ -13,14 +13,15 @@ interface CatRepository {
     fun getCats(): Flow<List<CatBreed>>
     fun getCatById(catId: String): Flow<CatBreed?>
     fun getFavouriteCats(): Flow<List<CatBreed>>
-    suspend fun insertFavouriteCat(cat: FavouriteCat)
-    suspend fun deleteFavouriteCat(cat: FavouriteCat)
+    fun getFavouriteCatById(id: String): Flow<CatBreed?>
+    suspend fun insertFavouriteCat(cat: FavouriteEntity)
+    suspend fun deleteFavouriteCat(cat: FavouriteEntity)
 }
 
 class CatRepositoryImpl @Inject constructor(
     private val api: CatService,
     private val catBreedMapper: CatBreedMapper,
-    private val favouriteCatDao: FavouriteCatDao
+    private val favouriteDao: FavouriteDao
 ) : CatRepository {
     override fun getCats(): Flow<List<CatBreed>> {
         return flow {
@@ -40,18 +41,26 @@ class CatRepositoryImpl @Inject constructor(
 
     override fun getFavouriteCats(): Flow<List<CatBreed>> {
         return flow {
-            val favouriteCats = favouriteCatDao.getAllFavouriteCats()
+            val favouriteCats = favouriteDao.getAllFavouriteCats()
             favouriteCats.collect { cats ->
                 emit(cats.map { catBreedMapper.toDomain(it) })
             }
         }
     }
 
-    override suspend fun insertFavouriteCat(cat: FavouriteCat) {
-        favouriteCatDao.insertFavouriteCat(cat)
+    override suspend fun insertFavouriteCat(cat: FavouriteEntity) {
+        favouriteDao.insertFavouriteCat(cat)
     }
 
-    override suspend fun deleteFavouriteCat(cat: FavouriteCat) {
-        favouriteCatDao.deleteFavouriteCat(cat)
+    override suspend fun deleteFavouriteCat(cat: FavouriteEntity) {
+        favouriteDao.deleteFavouriteCat(cat)
+    }
+
+    override fun getFavouriteCatById(id: String): Flow<CatBreed?> {
+        return flow {
+            favouriteDao.getFavouriteCatById(id).collect { cat ->
+                emit(cat?.let { catBreedMapper.toDomain(it) })
+            }
+        }
     }
 }

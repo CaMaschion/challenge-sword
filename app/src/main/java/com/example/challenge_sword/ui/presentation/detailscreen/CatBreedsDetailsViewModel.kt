@@ -27,8 +27,19 @@ class CatBreedsDetailsViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    private val _isFavourite = MutableStateFlow(false)
-    val isFavourite: StateFlow<Boolean> get() = _isFavourite
+    private var isFavourite = false
+
+    private fun checkFavouriteCat(catId: String) {
+        viewModelScope.launch {
+            favouriteInteractor.getFavouriteCatById(catId)
+                .catch { e ->
+                    Log.e("CatBreedsDetailsViewModel", "Error fetching favourite cat", e)
+                }
+                .collect { cat ->
+                    isFavourite = cat != null
+                }
+        }
+    }
 
     fun getSelectedCatBreed(catId: String) {
         viewModelScope.launch {
@@ -38,6 +49,10 @@ class CatBreedsDetailsViewModel @Inject constructor(
                     _isLoading.value = false
                 }
                 .collect { cat ->
+                    if (cat != null) {
+                        checkFavouriteCat(catId)
+                        cat.isFavourite = isFavourite
+                    }
                     _selectedCatBreed.value = cat
                     _isLoading.value = false
                 }
@@ -46,12 +61,12 @@ class CatBreedsDetailsViewModel @Inject constructor(
 
     fun toggleFavourite(cat: CatBreed) {
         viewModelScope.launch {
-            if (_isFavourite.value) {
+            if (isFavourite) {
                 favouriteInteractor.removeFavouriteCat(cat)
             } else {
                 favouriteInteractor.addFavouriteCat(cat)
             }
-            _isFavourite.value = !_isFavourite.value
+            isFavourite = !isFavourite
         }
     }
 }

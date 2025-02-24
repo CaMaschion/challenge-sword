@@ -21,7 +21,6 @@ import com.example.challenge_sword.ui.presentation.detailscreen.CatBreedsDetails
 fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
     val viewModel: CatBreedsDetailsViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
-    val isFavourite by viewModel.isFavourite.collectAsState()
     val cat by viewModel.selectedCatBreed
 
     LaunchedEffect(catId) {
@@ -48,7 +47,6 @@ fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
             }
         } else {
             CatBreedDetailComponent(
-                isFavourite = isFavourite,
                 cat = cat,
                 onBackButtonClick = onBackButtonClick,
                 onClickFavourite = {

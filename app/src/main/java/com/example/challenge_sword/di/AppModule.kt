@@ -2,7 +2,7 @@ package com.example.challenge_sword.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.challenge_sword.data.dao.FavouriteCatDao
+import com.example.challenge_sword.data.dao.FavouriteDao
 import com.example.challenge_sword.data.database.AppDatabase
 import com.example.challenge_sword.data.repository.CatRepository
 import com.example.challenge_sword.data.repository.CatRepositoryImpl
@@ -45,9 +45,9 @@ object AppModule {
     fun provideCatRepository(
         catService: CatService,
         catBreedMapper: CatBreedMapper,
-        favouriteCatDao: FavouriteCatDao
+        favouriteDao: FavouriteDao
     ): CatRepository {
-        return CatRepositoryImpl(catService, catBreedMapper, favouriteCatDao)
+        return CatRepositoryImpl(catService, catBreedMapper, favouriteDao)
     }
 
     @Provides
@@ -76,7 +76,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFavouriteCatDao(database: AppDatabase): FavouriteCatDao {
+    fun provideFavouriteCatDao(database: AppDatabase): FavouriteDao {
         return database.favouriteCatDao()
     }
 }

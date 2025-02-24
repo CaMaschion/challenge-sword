@@ -8,7 +8,7 @@ data class CatBreed(
     val description: String,
     val lifeSpan: String,
     val imageUrl: String,
-    val favouriteId : Long? = null,
+    var isFavourite : Boolean = false,
 ) {
     fun getAverageLifeSpan(): String {
         val lifespanRange = lifeSpan.split("-")
