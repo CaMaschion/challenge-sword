@@ -47,9 +47,9 @@ class CatBreedsDetailsViewModel @Inject constructor(
     fun toggleFavourite(cat: CatBreed) {
         viewModelScope.launch {
             if (_isFavourite.value) {
-                favouriteInteractor.removeFavouriteCat(cat.id)
+                favouriteInteractor.removeFavouriteCat(cat)
             } else {
-                favouriteInteractor.addFavouriteCat(cat.id)
+                favouriteInteractor.addFavouriteCat(cat)
             }
             _isFavourite.value = !_isFavourite.value
         }

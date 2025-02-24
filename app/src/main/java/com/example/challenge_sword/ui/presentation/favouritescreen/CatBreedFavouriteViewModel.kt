@@ -1,7 +1,6 @@
 package com.example.challenge_sword.ui.presentation.favouritescreen
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.challenge_sword.domain.model.CatBreed
@@ -24,43 +23,44 @@ class CatBreedFavouriteViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    private val _favouriteCats = mutableStateMapOf<String, Boolean>()
-    val favouriteCats: Map<String, Boolean> get() = _favouriteCats
 
     init {
-        fetchFavouriteCat()
-    }
-
-    private fun fetchFavouriteCat() {
         viewModelScope.launch {
-            favouriteInteractor.getFavouriteCats()
-                .catch { e ->
-                    Log.e("CatBreedsFavouriteViewModel", "Error fetching cat breeds", e)
-                    _isLoading.value = false
-                }
-                .collect { favourites ->
-                    _catFavourite.value = favourites
-                    _isLoading.value = false
-                }
+            fetchFavouriteCat()
         }
     }
 
-    private fun removeFavouriteCat(cat: CatBreed) {
+    private suspend fun fetchFavouriteCat() {
+        favouriteInteractor.getFavouriteCats()
+            .catch { e ->
+                Log.e("CatBreedsFavouriteViewModel", "Error fetching cat breeds", e)
+                _isLoading.value = false
+            }
+            .collect { favourites ->
+                _catFavourite.value = favourites
+                _isLoading.value = false
+            }
+    }
+
+    private fun insertFavouriteCat(cat: CatBreed) {
         viewModelScope.launch {
-            _catFavourite.value = _catFavourite.value.filter { it.id != cat.id }
+            favouriteInteractor.addFavouriteCat(cat)
+            fetchFavouriteCat()
+        }
+    }
+
+    private fun deleteFavouriteCat(cat: CatBreed) {
+        viewModelScope.launch {
+            favouriteInteractor.removeFavouriteCat(cat)
+            fetchFavouriteCat()
         }
     }
 
     fun toggleFavourite(cat: CatBreed) {
-        viewModelScope.launch {
-            val isFavourite = _favouriteCats[cat.id] ?: true
-            if (isFavourite) {
-                favouriteInteractor.removeFavouriteCat(cat.id)
-                removeFavouriteCat(cat)
-            } else {
-                favouriteInteractor.addFavouriteCat(cat.id)
-            }
-            _favouriteCats[cat.id] = !isFavourite
+        if (_catFavourite.value.contains(cat)) {
+            deleteFavouriteCat(cat)
+        } else {
+            insertFavouriteCat(cat)
         }
     }
 }

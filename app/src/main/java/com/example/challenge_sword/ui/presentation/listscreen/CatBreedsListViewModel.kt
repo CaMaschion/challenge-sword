@@ -69,15 +69,28 @@ class CatBreedsListViewModel @Inject constructor(
         }
     }
 
+    private fun insertFavouriteCat(cat: CatBreed) {
+        viewModelScope.launch {
+            favouriteInteractor.addFavouriteCat(cat)
+            fetchCatBreeds()
+        }
+    }
+
+    private fun deleteFavouriteCat(cat: CatBreed) {
+        viewModelScope.launch {
+            favouriteInteractor.removeFavouriteCat(cat)
+            fetchCatBreeds()
+        }
+    }
+
     fun toggleFavourite(cat: CatBreed) {
         viewModelScope.launch {
             val isFavourite = _favouriteCats[cat.id] ?: false
             if (isFavourite) {
-                favouriteInteractor.removeFavouriteCat(cat.id)
+                deleteFavouriteCat(cat)
             } else {
-                favouriteInteractor.addFavouriteCat(cat.id)
+                insertFavouriteCat(cat)
             }
-            _favouriteCats[cat.id] = !isFavourite
         }
     }
 }
