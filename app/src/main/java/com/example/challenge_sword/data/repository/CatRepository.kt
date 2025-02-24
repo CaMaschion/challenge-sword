@@ -1,6 +1,7 @@
 package com.example.challenge_sword.data.repository
 
-import com.example.challenge_sword.data.model.request.FavouriteRequest
+import com.example.challenge_sword.data.dao.FavouriteCatDao
+import com.example.challenge_sword.data.model.entity.FavouriteCat
 import com.example.challenge_sword.data.service.CatService
 import com.example.challenge_sword.domain.mapper.CatBreedMapper
 import com.example.challenge_sword.domain.model.CatBreed
@@ -11,14 +12,15 @@ import javax.inject.Inject
 interface CatRepository {
     fun getCats(): Flow<List<CatBreed>>
     fun getCatById(catId: String): Flow<CatBreed?>
-    fun getFavouriteCats(subId: String): Flow<List<CatBreed>>
-    suspend fun addFavouriteCat(subId: String, catId: String)
-    suspend fun removeFavouriteCat(favouriteId: String)
+    fun getFavouriteCats(): Flow<List<CatBreed>>
+    suspend fun insertFavouriteCat(cat: FavouriteCat)
+    suspend fun deleteFavouriteCat(cat: FavouriteCat)
 }
 
 class CatRepositoryImpl @Inject constructor(
     private val api: CatService,
-    private val catBreedMapper: CatBreedMapper
+    private val catBreedMapper: CatBreedMapper,
+    private val favouriteCatDao: FavouriteCatDao
 ) : CatRepository {
     override fun getCats(): Flow<List<CatBreed>> {
         return flow {
@@ -36,21 +38,20 @@ class CatRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getFavouriteCats(subId: String): Flow<List<CatBreed>> {
+    override fun getFavouriteCats(): Flow<List<CatBreed>> {
         return flow {
-            val favouriteResponses = api.getFavouriteCats(subId)
-            val favouriteBreeds =
-                favouriteResponses.map { catBreedMapper.toDomain(it) }
-            emit(favouriteBreeds)
+            val favouriteCats = favouriteCatDao.getAllFavouriteCats()
+            favouriteCats.collect { cats ->
+                emit(cats.map { catBreedMapper.toDomain(it) })
+            }
         }
     }
 
-    override suspend fun addFavouriteCat(subId: String, catId: String) {
-        val favouriteRequest = FavouriteRequest(sub_id = subId, image_id = catId)
-        api.addFavouriteCat(favouriteRequest)
+    override suspend fun insertFavouriteCat(cat: FavouriteCat) {
+        favouriteCatDao.insertFavouriteCat(cat)
     }
 
-    override suspend fun removeFavouriteCat(favouriteId: String) {
-        api.removeFavouriteCat(favouriteId)
+    override suspend fun deleteFavouriteCat(cat: FavouriteCat) {
+        favouriteCatDao.deleteFavouriteCat(cat)
     }
 }

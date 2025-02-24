@@ -73,7 +73,7 @@ fun CatBreedFavouriteScreen(
                             onClickFavourite = { viewModel.toggleFavourite(cat) },
                             showLifeSpan = true,
                             cat = cat,
-                            isFavourite = viewModel.favouriteCats[cat.id] ?: true,
+                            isFavourite = true,
                             onClick = {
                                 navController.navigate("catBreedsDetails/${cat.id}")
                             }
