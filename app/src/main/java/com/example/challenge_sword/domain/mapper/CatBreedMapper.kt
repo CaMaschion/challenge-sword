@@ -1,8 +1,8 @@
 package com.example.challenge_sword.domain.mapper
 
+import com.example.challenge_sword.data.model.entity.FavouriteCat
 import com.example.challenge_sword.domain.model.CatBreed
 import com.example.challenge_sword.data.model.response.CatResponse
-import com.example.challenge_sword.data.model.response.FavouriteResponse
 
 class CatBreedMapper {
     fun toDomain(catResponse: CatResponse): CatBreed {
@@ -18,16 +18,25 @@ class CatBreedMapper {
         )
     }
 
-    fun toDomain(favouriteResponse: FavouriteResponse): CatBreed {
+    fun toDomain(favouriteCat: FavouriteCat): CatBreed {
         return CatBreed(
-            id = favouriteResponse.image.id,
-            name = "",
-            imageUrl = favouriteResponse.image.url,
+            id = favouriteCat.id,
+            name = favouriteCat.name,
+            imageUrl = favouriteCat.url,
             origin = "",
             temperament = "",
             description = "",
-            lifeSpan = "",
-            favouriteId = favouriteResponse.id
+            lifeSpan = favouriteCat.lifeSpan,
+            favouriteId = 0
+        )
+    }
+
+    fun toEntity(catBreed: CatBreed): FavouriteCat {
+        return FavouriteCat(
+            id = catBreed.id,
+            name = catBreed.name,
+            url = catBreed.imageUrl,
+            lifeSpan = catBreed.lifeSpan
         )
     }
 }
