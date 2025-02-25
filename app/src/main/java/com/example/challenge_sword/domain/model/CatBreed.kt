@@ -1,7 +1,7 @@
 package com.example.challenge_sword.domain.model
 
 data class CatBreed(
-    val id: String,
+    var id: String,
     val name: String,
     val temperament: String,
     val origin: String,

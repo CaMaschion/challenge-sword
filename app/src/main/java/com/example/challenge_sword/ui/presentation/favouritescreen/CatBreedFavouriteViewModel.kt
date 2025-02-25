@@ -57,10 +57,12 @@ class CatBreedFavouriteViewModel @Inject constructor(
     }
 
     fun toggleFavourite(cat: CatBreed) {
-        if (_catFavourite.value.contains(cat)) {
-            deleteFavouriteCat(cat)
-        } else {
-            insertFavouriteCat(cat)
+        viewModelScope.launch {
+            if (_catFavourite.value.contains(cat)) {
+                deleteFavouriteCat(cat)
+            } else {
+                insertFavouriteCat(cat)
+            }
         }
     }
 }
