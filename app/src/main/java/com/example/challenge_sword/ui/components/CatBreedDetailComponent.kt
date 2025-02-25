@@ -32,6 +32,7 @@ fun CatBreedDetailComponent(
     cat: CatBreed?,
     onBackButtonClick: () -> Unit,
     onClickFavourite: () -> Unit = {},
+    isFavourite: Boolean
 ) {
 
     if (cat == null) {
@@ -115,7 +116,7 @@ fun CatBreedDetailComponent(
                 }
 
                 CatBreedFavouriteIconButtonComponent(
-                    isFavourite = cat.isFavourite,
+                    isFavourite = isFavourite,
                     onClick = onClickFavourite
                 )
             }

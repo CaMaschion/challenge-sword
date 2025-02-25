@@ -49,6 +49,7 @@ class CatBreedsListViewModel @Inject constructor(
 
     init {
         fetchCatBreeds()
+        fetchFavouriteCats()
     }
 
     fun updateSearchQuery(query: String) {
@@ -69,17 +70,28 @@ class CatBreedsListViewModel @Inject constructor(
         }
     }
 
+    private fun fetchFavouriteCats() {
+        viewModelScope.launch {
+            favouriteInteractor.getFavouriteCats()
+                .catch { e -> Log.e("CatBreedsViewModel", "Error fetching favourites", e) }
+                .collect { favourites ->
+                    _favouriteCats.clear()
+                    favourites.forEach { cat -> _favouriteCats[cat.id] = true }
+                }
+        }
+    }
+
     private fun insertFavouriteCat(cat: CatBreed) {
         viewModelScope.launch {
             favouriteInteractor.addFavouriteCat(cat)
-            fetchCatBreeds()
+            _favouriteCats[cat.id] = true
         }
     }
 
     private fun deleteFavouriteCat(cat: CatBreed) {
         viewModelScope.launch {
             favouriteInteractor.removeFavouriteCat(cat)
-            fetchCatBreeds()
+            _favouriteCats.remove(cat.id)
         }
     }
 
