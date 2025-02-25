@@ -27,7 +27,8 @@ class CatRepositoryImpl @Inject constructor(
         return flow {
             val catResponses = api.getCats()
             val catBreeds = catResponses.map { catBreedMapper.toDomain(it) }
-            emit(catBreeds)
+            val uniqueCats = catBreeds.distinctBy { it.name }
+            emit(uniqueCats)
         }
     }
 

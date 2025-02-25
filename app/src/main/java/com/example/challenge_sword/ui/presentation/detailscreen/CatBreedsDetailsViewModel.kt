@@ -21,22 +21,29 @@ class CatBreedsDetailsViewModel @Inject constructor(
     private val favouriteInteractor: FavouriteInteractor
 ) : ViewModel() {
 
-    private val _selectedCatBreed = mutableStateOf<CatBreed?>(null)
+    private var _selectedCatBreed = mutableStateOf<CatBreed?>(null)
     val selectedCatBreed: State<CatBreed?> = _selectedCatBreed
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
-    private var isFavourite = false
+    private val _isFavourite = MutableStateFlow(false)
+    val isFavourite: StateFlow<Boolean> get() = _isFavourite
 
-    private fun checkFavouriteCat(catId: String) {
+    init {
+        fetchFavouriteCats()
+
+    }
+
+    fun fetchFavouriteCats() {
         viewModelScope.launch {
-            favouriteInteractor.getFavouriteCatById(catId)
+            favouriteInteractor.getFavouriteCats()
                 .catch { e ->
-                    Log.e("CatBreedsDetailsViewModel", "Error fetching favourite cat", e)
+                    Log.e("CatBreedsDetailsViewModel", "Error fetching favourite cats", e)
                 }
-                .collect { cat ->
-                    isFavourite = cat != null
+                .collect { favourites ->
+                    _isFavourite.value =
+                        favourites.any { cat -> _selectedCatBreed.value?.id == cat.id }
                 }
         }
     }
@@ -45,28 +52,30 @@ class CatBreedsDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             catRepository.getCatById(catId)
                 .catch { e ->
-                    Log.e("CatBreedsDetailsViewModel", "Error fetching cat breeds", e)
+                    Log.e("CatBreedsDetailsViewModel", "Error fetching cat breed", e)
                     _isLoading.value = false
                 }
                 .collect { cat ->
-                    if (cat != null) {
-                        checkFavouriteCat(catId)
-                        cat.isFavourite = isFavourite
-                    }
                     _selectedCatBreed.value = cat
                     _isLoading.value = false
                 }
         }
     }
 
+
     fun toggleFavourite(cat: CatBreed) {
         viewModelScope.launch {
-            if (isFavourite) {
+            if (_isFavourite.value) {
                 favouriteInteractor.removeFavouriteCat(cat)
             } else {
                 favouriteInteractor.addFavouriteCat(cat)
             }
-            isFavourite = !isFavourite
+            _selectedCatBreed.value?.let { selectedCat ->
+                if (selectedCat.id == cat.id) {
+                    selectedCat.isFavourite = _isFavourite.value
+                    _selectedCatBreed.value = selectedCat
+                }
+            }
         }
     }
 }

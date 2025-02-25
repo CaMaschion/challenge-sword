@@ -22,9 +22,11 @@ fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
     val viewModel: CatBreedsDetailsViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
     val cat by viewModel.selectedCatBreed
+    val isFavourite by viewModel.isFavourite.collectAsState()
 
     LaunchedEffect(catId) {
         viewModel.getSelectedCatBreed(catId)
+        viewModel.fetchFavouriteCats()
     }
 
     Column(
@@ -49,6 +51,7 @@ fun CatBreedsDetailsScreen(catId: String, onBackButtonClick: () -> Unit) {
             CatBreedDetailComponent(
                 cat = cat,
                 onBackButtonClick = onBackButtonClick,
+                isFavourite = isFavourite,
                 onClickFavourite = {
                     cat?.let {
                         viewModel.toggleFavourite(
